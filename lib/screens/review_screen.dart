@@ -64,9 +64,7 @@ class _ReviewScreenState extends State<ReviewScreen> with SingleTickerProviderSt
     final cardProvider = Provider.of<CardProvider>(context, listen: false);
     final currentCard = _reviewCards[_currentCardIndex];
     
-    // Обновляем карточку согласно оценке
     if (quality == 0) {
-      // Для кнопки "Снова" - сбрасываем прогресс
       currentCard.repetitionCount = 0;
       currentCard.interval = 1;
       currentCard.easeFactor = 2.5;
@@ -75,26 +73,24 @@ class _ReviewScreenState extends State<ReviewScreen> with SingleTickerProviderSt
       currentCard.updateAfterReview(quality);
     }
     
-    cardProvider.updateCard(currentCard);
+    cardProvider.reviewCard(currentCard.id, quality);
     _sessionCount++;
 
-    setState(() {
-      if (quality == 0) {
-        // Для "Снова" - остаемся на той же карточке
-        _isShowingAnswer = false;
-        _animationController.reset();
-      } else {
-        // Для других оценок - переходим к следующей карточке
-        _currentCardIndex = (_currentCardIndex + 1) % _reviewCards.length;
-        _isShowingAnswer = false;
-        _animationController.reset();
-        
-        if (_currentCardIndex == 0) {
-          _reviewCards.shuffle();
-        }
+     setState(() {
+    if (quality == 0) {
+      _isShowingAnswer = false;
+      _animationController.reset();
+    } else {
+      _currentCardIndex = (_currentCardIndex + 1) % _reviewCards.length;
+      _isShowingAnswer = false;
+      _animationController.reset();
+      
+      if (_currentCardIndex == 0) {
+        _reviewCards.shuffle();
       }
-    });
-  }
+    }
+  });
+}
 
   void _showCompletionDialog() {
     showDialog(
@@ -369,7 +365,7 @@ class _ReviewScreenState extends State<ReviewScreen> with SingleTickerProviderSt
       child: Column(
         children: [
           Text(
-            'Насколько хорошо вы remembered?',
+            'Насколько хорошо вы запомнили?',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w600,
             ),
@@ -590,7 +586,6 @@ class _ReviewScreenState extends State<ReviewScreen> with SingleTickerProviderSt
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            // Прогресс-бар
             Container(
               height: 6,
               decoration: BoxDecoration(
@@ -610,8 +605,7 @@ class _ReviewScreenState extends State<ReviewScreen> with SingleTickerProviderSt
               ),
             ),
             const SizedBox(height: 32),
-            
-            // Карточка - теперь занимает всю ширину и центрирована
+          
             Expanded(
               child: GestureDetector(
                 onTap: _flipCard,

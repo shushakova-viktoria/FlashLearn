@@ -1,25 +1,35 @@
 import 'package:flutter/foundation.dart';
 import '../models/card_model.dart';
+import '../services/api_service.dart';
 
 class CardProvider with ChangeNotifier {
   List<Deck> decks = [];
   List<FlashCard> cards = [];
+  final ApiService _apiService = ApiService();
 
   CardProvider() {
-    // Временные данные для тестирования
-    _initializeSampleData();
+    _loadDecks();
+  }
+
+  Future<void> _loadDecks() async {
+    try {
+      decks = await _apiService.getDecks();
+      notifyListeners();
+    } catch (e) {
+      print('Error loading decks from API: $e');
+      _initializeSampleData();
+    }
   }
 
   void _initializeSampleData() {
-  final sampleDeck = Deck(
-    id: '1',
-    name: 'Программирование',
-    description: 'Основные понятия программирования',
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-    
-  );
-  decks.add(sampleDeck);
+    final sampleDeck = Deck(
+      id: '1',
+      name: 'Программирование',
+      description: 'Основные понятия программирования',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
+    decks.add(sampleDeck);
 
     cards.addAll([
       FlashCard(
@@ -40,54 +50,112 @@ class CardProvider with ChangeNotifier {
         updatedAt: DateTime.now(),
         nextReviewDate: DateTime.now(),
       ),
-      FlashCard(
-        id: '3',
-        question: 'Что такое State?',
-        answer: 'State - это данные, которые могут изменяться в течение жизненного цикла виджета',
-        deckId: '1',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-        nextReviewDate: DateTime.now(),
-      ),
     ]);
   }
 
-  // Временные методы - потом заменим на API calls
-  void addDeck(Deck deck) {
-    decks.add(deck);
-    notifyListeners();
-  }
-
-  void updateDeck(Deck deck) {
-    final index = decks.indexWhere((d) => d.id == deck.id);
-    if (index != -1) {
-      decks[index] = deck;
+  Future<void> addDeck(Deck deck) async {
+    try {
+      final newDeck = await _apiService.createDeck(deck);
+      decks.add(newDeck);
+      notifyListeners();
+    } catch (e) {
+      print('Error creating deck: $e');
+      decks.add(deck);
       notifyListeners();
     }
   }
 
-  void deleteDeck(String deckId) {
-    decks.removeWhere((deck) => deck.id == deckId);
-    cards.removeWhere((card) => card.deckId == deckId);
-    notifyListeners();
+  Future<void> updateDeck(Deck deck) async {
+    try {
+      final updatedDeck = await _apiService.updateDeck(deck);
+      final index = decks.indexWhere((d) => d.id == deck.id);
+      if (index != -1) {
+        decks[index] = updatedDeck;
+        notifyListeners();
+      }
+    } catch (e) {
+      print('Error updating deck: $e');
+      final index = decks.indexWhere((d) => d.id == deck.id);
+      if (index != -1) {
+        decks[index] = deck;
+        notifyListeners();
+      }
+    }
   }
 
-  void addCard(FlashCard card) {
-    cards.add(card);
-    notifyListeners();
-  }
-
-  void updateCard(FlashCard card) {
-    final index = cards.indexWhere((c) => c.id == card.id);
-    if (index != -1) {
-      cards[index] = card;
+  Future<void> deleteDeck(String deckId) async {
+    try {
+      await _apiService.deleteDeck(deckId);
+      decks.removeWhere((deck) => deck.id == deckId);
+      cards.removeWhere((card) => card.deckId == deckId);
+      notifyListeners();
+    } catch (e) {
+      print('Error deleting deck: $e');
+      decks.removeWhere((deck) => deck.id == deckId);
+      cards.removeWhere((card) => card.deckId == deckId);
       notifyListeners();
     }
   }
 
-  void deleteCard(String cardId) {
-    cards.removeWhere((card) => card.id == cardId);
-    notifyListeners();
+
+  Future<void> addCard(FlashCard card) async {
+    try {
+      final newCard = await _apiService.createCard(card);
+      cards.add(newCard);
+      notifyListeners();
+    } catch (e) {
+      print('Error creating card: $e');
+      cards.add(card);
+      notifyListeners();
+    }
+  }
+
+  Future<void> updateCard(FlashCard card) async {
+    try {
+      final updatedCard = await _apiService.updateCard(card);
+      final index = cards.indexWhere((c) => c.id == card.id);
+      if (index != -1) {
+        cards[index] = updatedCard;
+        notifyListeners();
+      }
+    } catch (e) {
+      print('Error updating card: $e');
+      final index = cards.indexWhere((c) => c.id == card.id);
+      if (index != -1) {
+        cards[index] = card;
+        notifyListeners();
+      }
+    }
+  }
+
+  Future<void> deleteCard(String cardId) async {
+    try {
+      await _apiService.deleteCard(cardId);
+      cards.removeWhere((card) => card.id == cardId);
+      notifyListeners();
+    } catch (e) {
+      print('Error deleting card: $e');
+      cards.removeWhere((card) => card.id == cardId);
+      notifyListeners();
+    }
+  }
+
+  Future<void> reviewCard(String cardId, int quality) async {
+    try {
+      await _apiService.reviewCard(cardId, quality);
+      final index = cards.indexWhere((c) => c.id == cardId);
+      if (index != -1) {
+        cards[index].updateAfterReview(quality);
+        notifyListeners();
+      }
+    } catch (e) {
+      print('Error reviewing card: $e');
+      final index = cards.indexWhere((c) => c.id == cardId);
+      if (index != -1) {
+        cards[index].updateAfterReview(quality);
+        notifyListeners();
+      }
+    }
   }
 
   List<FlashCard> getCardsByDeck(String deckId) {

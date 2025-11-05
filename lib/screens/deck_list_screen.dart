@@ -275,7 +275,6 @@ class DeckListScreen extends StatelessWidget {
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                // Кнопка редактирования
                                 IconButton(
                                   icon: Container(
                                     padding: const EdgeInsets.all(6),
@@ -292,7 +291,6 @@ class DeckListScreen extends StatelessWidget {
                                   onPressed: () => context.go('/decks/${deck.id}/edit'),
                                   tooltip: 'Редактировать колоду',
                                 ),
-                                // Кнопка удаления
                                 IconButton(
                                   icon: Container(
                                     padding: const EdgeInsets.all(6),
@@ -310,7 +308,6 @@ class DeckListScreen extends StatelessWidget {
                                   tooltip: 'Удалить колоду',
                                 ),
                                 const SizedBox(width: 8),
-                                // Кнопка повторения или просмотра
                                 dueCards > 0 
                                     ? GradientButton(
                                         text: 'Повторить',

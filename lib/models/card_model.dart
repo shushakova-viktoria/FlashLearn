@@ -26,37 +26,28 @@ class FlashCard {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'question': question,
       'answer': answer,
-      'deckId': deckId,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
-      'repetitionCount': repetitionCount,
-      'easeFactor': easeFactor,
-      'interval': interval,
-      'nextReviewDate': nextReviewDate.toIso8601String(),
+      'deck_id': deckId,
     };
   }
 
-  // Создание объекта из JSON с бекенда
   factory FlashCard.fromJson(Map<String, dynamic> json) {
     return FlashCard(
-      id: json['id'] ?? '',
+      id: json['id']?.toString() ?? '',
       question: json['question'] ?? '',
       answer: json['answer'] ?? '',
-      deckId: json['deckId'] ?? '',
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
-      repetitionCount: json['repetitionCount'] ?? 0,
-      easeFactor: (json['easeFactor'] ?? 2.5).toDouble(),
+      deckId: json['deck_id']?.toString() ?? '',
+      createdAt: DateTime.parse(json['created_at']),
+      updatedAt: DateTime.parse(json['updated_at']),
+      repetitionCount: json['repetitions'] ?? 0,
+      easeFactor: (json['ease_factor'] ?? 2.5).toDouble(),
       interval: json['interval'] ?? 0,
-      nextReviewDate: DateTime.parse(json['nextReviewDate'] ?? json['createdAt']),
+      nextReviewDate: DateTime.parse(json['next_review'] ?? json['created_at']),
     );
   }
 
   void updateAfterReview(int quality) {
-  
     if (quality >= 3) {
       if (repetitionCount == 0) {
         interval = 1;
@@ -71,12 +62,10 @@ class FlashCard {
       interval = 1;
     }
 
-
     easeFactor = easeFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
     if (easeFactor < 1.3) {
       easeFactor = 1.3;
     }
-
 
     nextReviewDate = DateTime.now().add(Duration(days: interval));
     updatedAt = DateTime.now();
@@ -100,21 +89,18 @@ class Deck {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'name': name,
+      'title': name,
       'description': description,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
     };
   }
 
   factory Deck.fromJson(Map<String, dynamic> json) {
     return Deck(
-      id: json['id'] ?? '',
-      name: json['name'] ?? '',
+      id: json['id']?.toString() ?? '',
+      name: json['title'] ?? '',
       description: json['description'] ?? '',
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      createdAt: DateTime.parse(json['created_at']),
+      updatedAt: DateTime.parse(json['updated_at']),
     );
   }
 }

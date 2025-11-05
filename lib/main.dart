@@ -33,12 +33,7 @@ class MyApp extends StatelessWidget {
               color: Colors.black87,
             ),
           ),
-          cardTheme: CardTheme(
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-          ),
+
           inputDecorationTheme: InputDecorationTheme(
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -48,17 +43,17 @@ class MyApp extends StatelessWidget {
             fillColor: Colors.grey[50],
             contentPadding: const EdgeInsets.all(16),
           ),
-          // Добавляем индикатор загрузки
+
           progressIndicatorTheme: const ProgressIndicatorThemeData(
             color: Color(0xFF6366F1),
           ),
         ),
         routerConfig: AppRouter.router,
-        // Обработка ошибок навигации
+
         builder: (context, child) {
           return GestureDetector(
             onTap: () {
-              // Скрываем клавиатуру при тапе вне поля ввода
+
               FocusScope.of(context).unfocus();
             },
             child: child,

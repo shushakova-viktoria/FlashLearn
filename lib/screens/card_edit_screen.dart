@@ -50,7 +50,6 @@ class _CardEditScreenState extends State<CardEditScreen> {
       final cardProvider = Provider.of<CardProvider>(context, listen: false);
 
       if (_isEditing && _editingCard != null) {
-        // Редактирование существующей карточки
         final updatedCard = FlashCard(
           id: _editingCard!.id,
           question: _questionController.text,
@@ -62,7 +61,6 @@ class _CardEditScreenState extends State<CardEditScreen> {
         );
         cardProvider.updateCard(updatedCard);
       } else {
-        // Создание новой карточки
         final newCard = FlashCard(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           question: _questionController.text,
@@ -75,13 +73,11 @@ class _CardEditScreenState extends State<CardEditScreen> {
         cardProvider.addCard(newCard);
       }
 
-      // Возвращаемся к списку карточек колоды
       context.go('/decks/${widget.deckId}/cards');
     }
   }
 
   void _goBack() {
-    // Безопасная навигация назад к списку карточек
     if (context.canPop()) {
       context.pop();
     } else {
@@ -132,7 +128,6 @@ class _CardEditScreenState extends State<CardEditScreen> {
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            // Заголовок с иконкой
             GlassCard(
               child: Padding(
                 padding: const EdgeInsets.all(32),
@@ -182,7 +177,6 @@ class _CardEditScreenState extends State<CardEditScreen> {
             ),
             const SizedBox(height: 24),
 
-            // Форма редактирования
             GlassCard(
               child: Padding(
                 padding: const EdgeInsets.all(24),
@@ -201,7 +195,6 @@ class _CardEditScreenState extends State<CardEditScreen> {
                       ),
                       const SizedBox(height: 20),
 
-                      // Поле вопроса
                       TextFormField(
                         controller: _questionController,
                         decoration: InputDecoration(
@@ -229,7 +222,6 @@ class _CardEditScreenState extends State<CardEditScreen> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Поле ответа
                       TextFormField(
                         controller: _answerController,
                         decoration: InputDecoration(
@@ -257,7 +249,6 @@ class _CardEditScreenState extends State<CardEditScreen> {
                       ),
                       const SizedBox(height: 20),
 
-                      // Панель форматирования
                       Text(
                         'Форматирование текста:',
                         style: TextStyle(
@@ -270,7 +261,6 @@ class _CardEditScreenState extends State<CardEditScreen> {
                       _buildFormattingToolbar(),
                       const SizedBox(height: 24),
 
-                      // Кнопка сохранения
                       GradientButton(
                         text: _isEditing ? 'Сохранить изменения' : 'Создать карточку',
                         onPressed: _saveCard,
@@ -369,7 +359,6 @@ class _CardEditScreenState extends State<CardEditScreen> {
         extentOffset: selection.end + prefix.length,
       );
     } else {
-      // Если нет выделения, вставляем в конец
       final newText = '$text$prefix$suffix';
       controller.text = newText;
       controller.selection = TextSelection.collapsed(

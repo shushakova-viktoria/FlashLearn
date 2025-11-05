@@ -92,7 +92,6 @@ class _DeckEditScreenState extends State<DeckEditScreen> {
           child: const Icon(Icons.arrow_back_rounded, color: Colors.black87),
         ),
         onPressed: () {
-          // Безопасная навигация назад
           if (context.canPop()) {
             context.pop();
           } else {

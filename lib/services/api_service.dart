@@ -8,9 +8,7 @@ class ApiService {
   factory ApiService() => _instance;
   ApiService._internal();
 
-  final String baseUrl = ApiConfig.baseUrl;
-
-  // Helper method for GET requests
+  static const String baseUrl = 'https://limnologically-guardable-dawson.ngrok-free.dev/api/v1';
   Future<dynamic> get(String endpoint) async {
     try {
       final response = await http.get(
@@ -28,7 +26,6 @@ class ApiService {
     }
   }
 
-  // Helper method for POST requests
   Future<dynamic> post(String endpoint, Map<String, dynamic> data) async {
     try {
       final response = await http.post(
@@ -47,7 +44,6 @@ class ApiService {
     }
   }
 
-  // Helper method for PUT requests
   Future<dynamic> put(String endpoint, Map<String, dynamic> data) async {
     try {
       final response = await http.put(
@@ -66,7 +62,6 @@ class ApiService {
     }
   }
 
-  // Helper method for DELETE requests
   Future<dynamic> delete(String endpoint) async {
     try {
       final response = await http.delete(
@@ -84,7 +79,6 @@ class ApiService {
     }
   }
 
-  // Deck methods
   Future<List<Deck>> getDecks() async {
     final data = await get(ApiConfig.decks);
     return (data as List).map((json) => Deck.fromJson(json)).toList();
@@ -104,9 +98,8 @@ class ApiService {
     return await delete('${ApiConfig.decks}/$deckId');
   }
 
-  // Card methods
   Future<List<FlashCard>> getCardsByDeck(String deckId) async {
-    final data = await get('${ApiConfig.decks}/$deckId${ApiConfig.cards}');
+    final data = await get('${ApiConfig.cards}/deck/$deckId');
     return (data as List).map((json) => FlashCard.fromJson(json)).toList();
   }
 
@@ -122,5 +115,10 @@ class ApiService {
 
   Future<bool> deleteCard(String cardId) async {
     return await delete('${ApiConfig.cards}/$cardId');
+  }
+
+  Future<dynamic> reviewCard(String cardId, int quality) async {
+    final data = await post('${ApiConfig.cards}/$cardId/review', {'quality': quality});
+    return data;
   }
 }
