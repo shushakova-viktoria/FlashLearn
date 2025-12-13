@@ -62,7 +62,7 @@ class _CardEditScreenState extends State<CardEditScreen> {
         cardProvider.updateCard(updatedCard);
       } else {
         final newCard = FlashCard(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          id: '',
           question: _questionController.text,
           answer: _answerController.text,
           deckId: widget.deckId,

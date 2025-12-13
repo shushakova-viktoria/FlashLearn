@@ -22,6 +22,7 @@ class CardProvider with ChangeNotifier {
   }
 
   void _initializeSampleData() {
+    print('Using empty deck list, will load from API');/*
     final sampleDeck = Deck(
       id: '1',
       name: 'Программирование',
@@ -42,7 +43,7 @@ class CardProvider with ChangeNotifier {
         nextReviewDate: DateTime.now(),
       ),
       FlashCard(
-        id: '2',
+        id: '1',
         question: 'Что такое Widget?',
         answer: 'Widget - это базовый строительный блок Flutter приложения',
         deckId: '1',
@@ -50,7 +51,7 @@ class CardProvider with ChangeNotifier {
         updatedAt: DateTime.now(),
         nextReviewDate: DateTime.now(),
       ),
-    ]);
+    ]);*/
   }
 
   Future<void> addDeck(Deck deck) async {

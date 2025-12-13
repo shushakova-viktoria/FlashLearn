@@ -85,9 +85,10 @@ class ApiService {
   }
 
   Future<Deck> createDeck(Deck deck) async {
-    final data = await post(ApiConfig.decks, deck.toJson());
-    return Deck.fromJson(data);
-  }
+  // Добавьте слеш в конце
+  final data = await post('${ApiConfig.decks}/', deck.toJson());
+  return Deck.fromJson(data);
+}
 
   Future<Deck> updateDeck(Deck deck) async {
     final data = await put('${ApiConfig.decks}/${deck.id}', deck.toJson());
@@ -95,7 +96,14 @@ class ApiService {
   }
 
   Future<bool> deleteDeck(String deckId) async {
-    return await delete('${ApiConfig.decks}/$deckId');
+  // Преобразуем строку в int
+  final int deckIdInt = int.tryParse(deckId) ?? 0;
+  if (deckIdInt == 0) {
+      throw Exception('Invalid deck ID format: $deckId');
+    }
+  
+  print('🔄 DELETE deck request: $deckIdInt (converted from $deckId)');
+  return await delete('${ApiConfig.decks}/$deckIdInt'); // Отправляем как число
   }
 
   Future<List<FlashCard>> getCardsByDeck(String deckId) async {
@@ -104,7 +112,7 @@ class ApiService {
   }
 
   Future<FlashCard> createCard(FlashCard card) async {
-    final data = await post(ApiConfig.cards, card.toJson());
+    final data = await post('${ApiConfig.cards}/', card.toJson());
     return FlashCard.fromJson(data);
   }
 
@@ -121,4 +129,5 @@ class ApiService {
     final data = await post('${ApiConfig.cards}/$cardId/review', {'quality': quality});
     return data;
   }
+  
 }

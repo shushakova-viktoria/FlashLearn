@@ -4,10 +4,16 @@ import '../screens/card_list_screen.dart';
 import '../screens/card_edit_screen.dart';
 import '../screens/deck_edit_screen.dart';
 import '../screens/review_screen.dart';
+import '../screens/welcome_screen.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
+    initialLocation: '/welcome', 
     routes: [
+      GoRoute(
+      path: '/welcome',
+      builder: (context, state) => const WelcomeScreen(),
+    ),
       GoRoute(
         path: '/',
         name: 'decks',
@@ -59,6 +65,8 @@ class AppRouter {
       return ReviewScreen(deckId: deckId);
         },
       ),
+      
+      
     ],
   );
 }

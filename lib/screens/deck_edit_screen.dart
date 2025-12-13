@@ -55,7 +55,7 @@ class _DeckEditScreenState extends State<DeckEditScreen> {
         cardProvider.updateDeck(updatedDeck);
       } else {
         final newDeck = Deck(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          id: '',
           name: _nameController.text,
           description: _descriptionController.text,
           createdAt: DateTime.now(),

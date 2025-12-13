@@ -28,7 +28,7 @@ class FlashCard {
     return {
       'question': question,
       'answer': answer,
-      'deck_id': deckId,
+       'deck_id': int.parse(deckId),
     };
   }
 
