@@ -8,6 +8,14 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     password: str
 
+class UserLogin(BaseModel):  # 🔹 ДОБАВИТЬ
+    username: str
+    password: str
+
+class Token(BaseModel):  # 🔹 ДОБАВИТЬ
+    access_token: str
+    token_type: str = "bearer"
+
 class UserResponse(UserBase):
     id: int
     created_at: datetime

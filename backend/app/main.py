@@ -2,6 +2,9 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from app.core.config import settings
+from app.database import engine, Base
+from app import models
+from app.api.endpoints import users, decks, cards, auth 
 
 app = FastAPI(
     title="FlashLearn API",
@@ -9,33 +12,32 @@ app = FastAPI(
     version="0.2.0"
 )
 
-# CORS для Flutter - разрешаем всё
+# CORS для Flutter
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.ALLOWED_ORIGINS,  # ["*"] для Flutter
+    allow_origins=settings.ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Статические файлы
-app.mount("/uploads", StaticFiles(directory=settings.UPLOAD_DIR), name="uploads")
+settings.API_V1_PREFIX = "/api/v1"
+Base.metadata.create_all(bind=engine)
 
-# Импортируем и подключаем роутеры
-from app.api.endpoints import users, decks, cards, media
-
-app.include_router(users.router, prefix=settings.API_V1_PREFIX, tags=["users"])
+app.include_router(auth.router, prefix="/api/v1", tags=["Auth"])  # 🔹 Добавить
+app.include_router(users.router, prefix="/api/v1/users", tags=["Users"])
 app.include_router(decks.router, prefix=settings.API_V1_PREFIX, tags=["decks"])
 app.include_router(cards.router, prefix=settings.API_V1_PREFIX, tags=["cards"])
-app.include_router(media.router, prefix=settings.API_V1_PREFIX, tags=["media"])
+
 
 @app.get("/")
-async def root(request: Request):  # ← Добавьте Request параметр
+async def root(request: Request):
     base_url = str(request.base_url)
     return {
         "message": "🚀 FlashLearn API с Flutter фронтендом работает!",
-        "docs": "/docs",
-        "media_url": f"{base_url}uploads"  # ← Динамический URL
+        "docs_url": f"{base_url}docs",
+        "redoc_url": f"{base_url}redoc",
+        "health_check": f"{base_url}health"
     }
 
 @app.get("/health")

@@ -12,10 +12,6 @@ class CardCreate(CardBase):
 class CardResponse(CardBase):
     id: int
     deck_id: int
-    question_image: Optional[str] = None
-    answer_image: Optional[str] = None
-    question_audio: Optional[str] = None
-    answer_audio: Optional[str] = None
     ease_factor: float
     interval: int
     repetitions: int
@@ -29,19 +25,7 @@ class CardResponse(CardBase):
 class CardUpdate(BaseModel):
     question: Optional[str] = None
     answer: Optional[str] = None
-    question_image: Optional[str] = None
-    answer_image: Optional[str] = None
-    question_audio: Optional[str] = None
-    answer_audio: Optional[str] = None
 
-class TTSRequest(BaseModel):
-    text: str
-    language_code: str = "ru-RU"
-
-class TTSResponse(BaseModel):
-    audio_url: str
-    text: str
-    language_code: str
 
 class ReviewRequest(BaseModel):
     quality: int  # 0-5
@@ -58,10 +42,6 @@ class ReviewCard(BaseModel):
     question: str
     answer: str
     deck_id: int
-    question_image: Optional[str] = None
-    answer_image: Optional[str] = None
-    question_audio: Optional[str] = None
-    answer_audio: Optional[str] = None
     
     class Config:
         from_attributes = True

@@ -153,3 +153,54 @@ Thumbs.db
 # Build
 /build/
 *.iml
+
+# Виртуальное окружение
+venv/
+env/
+.venv/
+
+# Python кэш
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Базы данных
+*.db
+*.sqlite
+*.sqlite3
+
+# Загруженные файлы
+uploads/
+media/
+static/uploads/
+
+# Секреты и конфиги
+.env
+.env.local
+.env.production
+
+# Логи
+*.log
+
+# Временные файлы ngrok
+ngrok
+ngrok.tgz
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Файлы отчётов
+*.pid
+*.lock
+
+# Alembic (миграции БД — если нужно, оставить)
+# alembic/versions/ - не игнорируйте, они нужны
